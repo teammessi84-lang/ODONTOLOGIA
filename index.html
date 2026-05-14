@@ -3612,7 +3612,23 @@ function guardarPaciente(){
   const msg=document.getElementById('modal-msg');
   if(!nombre||!dni){msg.textContent='Nombre y DNI son obligatorios.';msg.classList.add('show');return;}
   if(pacientes.find(p=>String(p.dni)===String(dni))){msg.textContent='Ya existe un paciente con ese DNI.';msg.classList.add('show');return;}
-  pacientes.push({id:nextPacienteId++,nombre,dni,nacimiento:document.getElementById('mp-fecha').value,genero:document.getElementById('mp-genero').value,telefono:document.getElementById('mp-telefono').value.trim(),email:document.getElementById('mp-email-reg').value.trim().toLowerCase(),alergias:document.getElementById('mp-alergias').value.trim()||'Ninguna'});
+  const pacienteNuevo = {id:nextPacienteId++,nombre,dni,nacimiento:document.getElementById('mp-fecha').value,genero:document.getElementById('mp-genero').value,telefono:document.getElementById('mp-telefono').value.trim(),email:document.getElementById('mp-email-reg').value.trim().toLowerCase(),alergias:document.getElementById('mp-alergias').value.trim()||'Ninguna'};
+  pacientes.push(pacienteNuevo);
+
+  if (typeof guardarPacienteFirebase === 'function') {
+    guardarPacienteFirebase({
+      nombre: pacienteNuevo.nombre,
+      dni: pacienteNuevo.dni,
+      nacimiento: pacienteNuevo.nacimiento,
+      genero: pacienteNuevo.genero,
+      telefono: pacienteNuevo.telefono,
+      email: pacienteNuevo.email,
+      alergias: pacienteNuevo.alergias,
+      fecha: new Date().toLocaleString()
+    });
+  } else {
+    console.warn('Firebase no está cargado. Revisa que firebase.js esté subido y conectado.');
+  }
   saveData();closeModal('modal-paciente');renderPacientes();poblarSelectPaciente();poblarSelectHC();renderAgenda();renderDashboard();renderEstadisticas();showPatientsMsg('Paciente registrado correctamente.');
 }
 
@@ -4539,6 +4555,6 @@ function hideLoader(){const l=document.getElementById('page-loader');if(!l)retur
     </div>
   </div>
 </div>
-
+<script type="module" src="firebase.js"></script>
 </body>
 </html>
