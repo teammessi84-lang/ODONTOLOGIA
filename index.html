@@ -3615,6 +3615,17 @@ function guardarPaciente(){
   const pacienteNuevo = {id:nextPacienteId++,nombre,dni,nacimiento:document.getElementById('mp-fecha').value,genero:document.getElementById('mp-genero').value,telefono:document.getElementById('mp-telefono').value.trim(),email:document.getElementById('mp-email-reg').value.trim().toLowerCase(),alergias:document.getElementById('mp-alergias').value.trim()||'Ninguna'};
   pacientes.push(pacienteNuevo);
 
+guardarPacienteFirebase({
+  nombre: nombre,
+  dni: dni,
+  nacimiento: document.getElementById('mp-fecha').value,
+  genero: document.getElementById('mp-genero').value,
+  telefono: document.getElementById('mp-telefono').value.trim(),
+  email: document.getElementById('mp-email-reg').value.trim().toLowerCase(),
+  alergias: document.getElementById('mp-alergias').value.trim() || 'Ninguna',
+  fecha: new Date().toLocaleString()
+});
+
   if (typeof guardarPacienteFirebase === 'function') {
     guardarPacienteFirebase({
       nombre: pacienteNuevo.nombre,
